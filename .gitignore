@@ -1,0 +1,28 @@
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# C++ (CMake)
+cpp/build/
+*.o
+*.obj
+
+# Crystal
+crystal/bin/
+crystal/lib/
+*.dwarf
+shard.lock
+
+# Nim
+nim/idle_clicker
+nim/nimcache/
+
+# Odin
+odin/idle_clicker
+
+# Rust
+rust/target/
+**/*.rs.bk

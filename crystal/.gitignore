@@ -1,0 +1,4 @@
+/bin/
+/lib/
+*.dwarf
+shard.lock

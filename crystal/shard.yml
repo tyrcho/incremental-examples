@@ -1,0 +1,8 @@
+name: idle_clicker
+version: 0.1.0
+
+targets:
+  idle_clicker:
+    main: src/idle_clicker.cr
+
+# No dependencies — we hand-roll the raylib FFI inside src/idle_clicker.cr.
