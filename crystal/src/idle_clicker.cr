@@ -1,4 +1,6 @@
 require "lib_c"
+require "./ui_helpers"
+require "./game_loop"
 
 @[Link("raylib")]
 lib LibRaylib
@@ -45,9 +47,6 @@ GREEN     = LibRaylib::Color.new(r:   0_u8, g: 228_u8, b:  48_u8, a: 255_u8)
 DARKGREEN = LibRaylib::Color.new(r:   0_u8, g: 117_u8, b:  44_u8, a: 255_u8)
 SKYBLUE   = LibRaylib::Color.new(r: 102_u8, g: 191_u8, b: 255_u8, a: 255_u8)
 RED       = LibRaylib::Color.new(r: 230_u8, g:  41_u8, b:  55_u8, a: 255_u8)
-
-require "./ui_helpers"
-require "./game_loop"
 
 LibRaylib.init_window(WINDOW_W, WINDOW_H, "Idle Clicker")
 LibRaylib.set_target_fps(60)
