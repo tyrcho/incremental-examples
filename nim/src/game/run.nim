@@ -17,6 +17,14 @@ const
   CLICK_UPGRADE   = Rectangle(x: 400, y: 220, width: 320, height: 110)
   PASSIVE_UPGRADE = Rectangle(x: 400, y: 350, width: 320, height: 110)
 
+  COIN_FRAMES:     int32   = 8
+  COIN_FRAME_W:    float32 = 128.0
+  COIN_FRAME_H:    float32 = 128.0
+  COIN_FRAME_TIME: float64 = 0.06
+  COIN_SHEET_PATH          = "../assets/coin_sheet.png"
+
+  COIN_DEST = Rectangle(x: 125, y: 232, width: 150, height: 150)
+
 proc nextCost(c: int32): int32 =
   (c * 3) div 2
 
@@ -29,6 +37,12 @@ proc run*() =
     passiveCost: int32   = PASSIVE_COST_INIT
     accumulator: float64 = 0.0
 
+  let coin = loadTexture(COIN_SHEET_PATH)
+  var
+    animPlaying = false
+    animFrame: int32 = 0
+    animTimer: float64 = 0.0
+
   while not windowShouldClose():
     let dt = getFrameTime()
 
@@ -37,10 +51,23 @@ proc run*() =
       currency += 1
       accumulator -= 1.0
 
+    if animPlaying:
+      animTimer += float64(dt)
+      while animTimer >= COIN_FRAME_TIME:
+        animTimer -= COIN_FRAME_TIME
+        animFrame += 1
+        if animFrame >= COIN_FRAMES:
+          animFrame = COIN_FRAMES - 1
+          animPlaying = false
+          currency += int64(clickPower)
+          break
+
     let mouse = getMousePosition()
     if isMouseButtonPressed(MouseButton.Left):
       if checkCollisionPointRec(mouse, CLICK_BUTTON):
-        currency += int64(clickPower)
+        animPlaying = true
+        animFrame = 0
+        animTimer = 0.0
       elif checkCollisionPointRec(mouse, CLICK_UPGRADE) and
            currency >= int64(clickCost):
         currency -= int64(clickCost)
@@ -69,10 +96,12 @@ proc run*() =
       int32(CLICK_BUTTON.width), int32(CLICK_BUTTON.height),
       Green)
     drawRectangleLines(CLICK_BUTTON, 3.0'f32, DarkGreen)
+    let coinSrc = Rectangle(
+      x: float32(animFrame) * COIN_FRAME_W, y: 0,
+      width: COIN_FRAME_W, height: COIN_FRAME_H)
+    drawTexture(coin, coinSrc, COIN_DEST, Vector2(x: 0, y: 0), 0.0'f32, White)
     block:
-      let totalH = FONT_TITLE + FONT_LARGE
-      let topY = int32(CLICK_BUTTON.y) +
-                 (int32(CLICK_BUTTON.height) - totalH) div 2
+      let topY = 388'i32
       let cx  = int32(CLICK_BUTTON.x)
       let cw  = int32(CLICK_BUTTON.width)
       drawCenteredText("CLICK",            cx, cw, topY,              FONT_TITLE, Black)

@@ -13,6 +13,14 @@ const PASSIVE_Y: i32 = 140;
 const CLICK_COST_INIT: i32 = 10;
 const PASSIVE_COST_INIT: i32 = 25;
 
+const COIN_FRAMES: i32 = 8;
+const COIN_FRAME_W: f32 = 128.0;
+const COIN_FRAME_H: f32 = 128.0;
+const COIN_FRAME_TIME: f64 = 0.06;
+const COIN_SHEET_PATH: &str = "../assets/coin_sheet.png";
+
+const COIN_DEST: Rectangle = Rectangle { x: 125.0, y: 232.0, width: 150.0, height: 150.0 };
+
 const CLICK_BUTTON: Rectangle = Rectangle {
     x: 80.0,
     y: 220.0,
@@ -43,6 +51,12 @@ pub fn run(rl: &mut RaylibHandle, thread: &RaylibThread) {
     let mut click_cost: i32 = CLICK_COST_INIT;
     let mut passive_cost: i32 = PASSIVE_COST_INIT;
     let mut accumulator: f64 = 0.0;
+    let coin = rl
+        .load_texture(thread, COIN_SHEET_PATH)
+        .expect("load coin_sheet.png");
+    let mut anim_playing = false;
+    let mut anim_frame: i32 = 0;
+    let mut anim_timer: f64 = 0.0;
 
     while !rl.window_should_close() {
         let dt = rl.get_frame_time();
@@ -53,10 +67,26 @@ pub fn run(rl: &mut RaylibHandle, thread: &RaylibThread) {
             accumulator -= 1.0;
         }
 
+        if anim_playing {
+            anim_timer += dt as f64;
+            while anim_timer >= COIN_FRAME_TIME {
+                anim_timer -= COIN_FRAME_TIME;
+                anim_frame += 1;
+                if anim_frame >= COIN_FRAMES {
+                    anim_frame = COIN_FRAMES - 1;
+                    anim_playing = false;
+                    currency += click_power as i64;
+                    break;
+                }
+            }
+        }
+
         let mouse = rl.get_mouse_position();
         if rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) {
             if CLICK_BUTTON.check_collision_point_rec(mouse) {
-                currency += click_power as i64;
+                anim_playing = true;
+                anim_frame = 0;
+                anim_timer = 0.0;
             } else if CLICK_UPGRADE.check_collision_point_rec(mouse)
                 && currency >= click_cost as i64
             {
@@ -116,9 +146,17 @@ pub fn run(rl: &mut RaylibHandle, thread: &RaylibThread) {
         );
         d.draw_rectangle_lines_ex(CLICK_BUTTON, 3.0, Color::DARKGREEN);
         {
+            let source = Rectangle {
+                x: anim_frame as f32 * COIN_FRAME_W,
+                y: 0.0,
+                width: COIN_FRAME_W,
+                height: COIN_FRAME_H,
+            };
+            d.draw_texture_pro(&coin, source, COIN_DEST, Vector2::zero(), 0.0, Color::WHITE);
+        }
+        {
             let line2 = format!("(+{})", click_power);
-            let total_h = FONT_TITLE + FONT_LARGE;
-            let cy = CLICK_BUTTON.y as i32 + (CLICK_BUTTON.height as i32 - total_h) / 2;
+            let cy = 388;
             let cx = CLICK_BUTTON.x as i32;
             let cw = CLICK_BUTTON.width as i32;
             draw_centered_text(&mut d, "CLICK", cx, cw, cy, FONT_TITLE, Color::BLACK);

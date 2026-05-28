@@ -13,6 +13,14 @@ module Game
   CLICK_UPGRADE   = LibRaylib::Rectangle.new(x: 400.0_f32, y: 220.0_f32, width: 320.0_f32, height: 110.0_f32)
   PASSIVE_UPGRADE = LibRaylib::Rectangle.new(x: 400.0_f32, y: 350.0_f32, width: 320.0_f32, height: 110.0_f32)
 
+  COIN_FRAMES     =   8
+  COIN_FRAME_W    = 128.0_f32
+  COIN_FRAME_H    = 128.0_f32
+  COIN_FRAME_TIME = 0.06
+  COIN_SHEET_PATH = "../assets/coin_sheet.png"
+
+  COIN_DEST = LibRaylib::Rectangle.new(x: 125.0_f32, y: 232.0_f32, width: 150.0_f32, height: 150.0_f32)
+
   def self.next_cost(c : Int32) : Int32
     (c * 3) // 2
   end
@@ -25,6 +33,11 @@ module Game
     passive_cost = 25
     accumulator  = 0.0
 
+    coin         = LibRaylib.load_texture(COIN_SHEET_PATH)
+    anim_playing = false
+    anim_frame   = 0
+    anim_timer   = 0.0
+
     until LibRaylib.window_should_close
       dt = LibRaylib.get_frame_time
 
@@ -34,10 +47,26 @@ module Game
         accumulator -= 1.0
       end
 
+      if anim_playing
+        anim_timer += dt.to_f64
+        while anim_timer >= COIN_FRAME_TIME
+          anim_timer -= COIN_FRAME_TIME
+          anim_frame += 1
+          if anim_frame >= COIN_FRAMES
+            anim_frame   = COIN_FRAMES - 1
+            anim_playing = false
+            currency    += click_power
+            break
+          end
+        end
+      end
+
       mouse = LibRaylib.get_mouse_position
       if LibRaylib.is_mouse_button_pressed(LibRaylib::MOUSE_BUTTON_LEFT)
         if LibRaylib.check_collision_point_rec(mouse, CLICK_BUTTON)
-          currency += click_power
+          anim_playing = true
+          anim_frame   = 0
+          anim_timer   = 0.0
         elsif LibRaylib.check_collision_point_rec(mouse, CLICK_UPGRADE) && currency >= click_cost
           currency    -= click_cost
           click_power += 1
@@ -60,8 +89,13 @@ module Game
                                CLICK_BUTTON.width.to_i, CLICK_BUTTON.height.to_i, GREEN)
       LibRaylib.draw_rectangle_lines_ex(CLICK_BUTTON, 3.0_f32, DARKGREEN)
 
-      block_h = FONT_TITLE + FONT_LARGE
-      top_y   = CLICK_BUTTON.y.to_i + (CLICK_BUTTON.height.to_i - block_h) // 2
+      coin_src = LibRaylib::Rectangle.new(
+        x: anim_frame.to_f32 * COIN_FRAME_W, y: 0.0_f32,
+        width: COIN_FRAME_W, height: COIN_FRAME_H)
+      origin = LibRaylib::Vector2.new(x: 0.0_f32, y: 0.0_f32)
+      LibRaylib.draw_texture_pro(coin, coin_src, COIN_DEST, origin, 0.0_f32, WHITE)
+
+      top_y   = 388
       cx      = CLICK_BUTTON.x.to_i
       cw      = CLICK_BUTTON.width.to_i
       draw_centered_text("CLICK",             cx, cw, top_y,              FONT_TITLE, BLACK)
@@ -76,5 +110,7 @@ module Game
 
       LibRaylib.end_drawing
     end
+
+    LibRaylib.unload_texture(coin)
   end
 end
