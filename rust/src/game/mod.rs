@@ -1,6 +1,7 @@
 use raylib::prelude::*;
 
-use crate::ui_helpers::*;
+mod ui_helpers;
+use self::ui_helpers::*;
 
 pub const WINDOW_W: i32 = 800;
 pub const WINDOW_H: i32 = 600;
@@ -35,7 +36,7 @@ fn next_cost(c: i32) -> i32 {
     c * 3 / 2
 }
 
-pub fn run_game_loop(rl: &mut RaylibHandle, thread: &RaylibThread) {
+pub fn run(rl: &mut RaylibHandle, thread: &RaylibThread) {
     let mut currency: i64 = 0;
     let mut click_power: i32 = 1;
     let mut passive_rate: i32 = 0;

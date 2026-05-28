@@ -2,6 +2,8 @@
 
 #include <raylib.h>
 
+namespace game {
+
 inline constexpr int FONT_TITLE  = 36;
 inline constexpr int FONT_LARGE  = 28;
 inline constexpr int FONT_MEDIUM = 20;
@@ -27,3 +29,5 @@ inline void draw_upgrade_button(Rectangle r, const char* title,
     DrawText(effect_line, x, y, FONT_SMALL,  DARKGRAY);       y += FONT_SMALL  + 4;
     DrawText(cost_line,   x, y, FONT_SMALL,  affordable ? BLACK : RED);
 }
+
+} // namespace game

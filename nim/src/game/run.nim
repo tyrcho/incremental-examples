@@ -20,7 +20,7 @@ const
 proc nextCost(c: int32): int32 =
   (c * 3) div 2
 
-proc runGameLoop*() =
+proc run*() =
   var
     currency:    int64   = 0
     clickPower:  int32   = 1

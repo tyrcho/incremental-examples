@@ -1,10 +1,11 @@
 package main
 
 import rl "vendor:raylib"
+import "game"
 
 main :: proc() {
-	rl.InitWindow(WINDOW_W, WINDOW_H, "Idle Clicker")
+	rl.InitWindow(game.WINDOW_W, game.WINDOW_H, "Idle Clicker")
 	defer rl.CloseWindow()
 	rl.SetTargetFPS(60)
-	run_game_loop()
+	game.run()
 }

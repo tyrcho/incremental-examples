@@ -6,6 +6,8 @@
 
 #include "ui_helpers.hpp"
 
+namespace game {
+
 inline constexpr int WINDOW_W = 800;
 inline constexpr int WINDOW_H = 600;
 
@@ -19,7 +21,7 @@ inline constexpr Rectangle PASSIVE_UPGRADE = { 400.0f, 350.0f, 320.0f, 110.0f };
 
 inline int32_t next_cost(int32_t c) { return (c * 3) / 2; }
 
-inline void run_game_loop() {
+inline void run() {
     int64_t currency     = 0;
     int32_t click_power  = 1;
     int32_t passive_rate = 0;
@@ -88,3 +90,5 @@ inline void run_game_loop() {
         EndDrawing();
     }
 }
+
+} // namespace game
