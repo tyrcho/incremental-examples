@@ -1,9 +1,9 @@
-#include "game_loop.hpp"
+#include "game/run.hpp"
 
 int main() {
-    InitWindow(WINDOW_W, WINDOW_H, "Idle Clicker");
+    InitWindow(game::WINDOW_W, game::WINDOW_H, "Idle Clicker");
     SetTargetFPS(60);
-    run_game_loop();
+    game::run();
     CloseWindow();
     return 0;
 }

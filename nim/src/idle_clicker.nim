@@ -1,10 +1,10 @@
 import raylib
-import ./game_loop
+from ./game/run as game import run, WINDOW_W, WINDOW_H
 
 proc main() =
-  initWindow(WINDOW_W, WINDOW_H, "Idle Clicker")
+  initWindow(game.WINDOW_W, game.WINDOW_H, "Idle Clicker")
   setTargetFps(60)
-  runGameLoop()
+  game.run()
   closeWindow()
 
 when isMainModule:

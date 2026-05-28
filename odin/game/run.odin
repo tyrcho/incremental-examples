@@ -1,4 +1,4 @@
-package main
+package game
 
 import rl "vendor:raylib"
 import "core:fmt"
@@ -18,7 +18,7 @@ next_cost :: proc(c: i32) -> i32 {
 	return (c * 3) / 2
 }
 
-run_game_loop :: proc() {
+run :: proc() {
 	currency:     i64 = 0
 	click_power:  i32 = 1
 	passive_rate: i32 = 0
