@@ -6,26 +6,26 @@ use self::ui_helpers::*;
 pub const WINDOW_W: i32 = 800;
 pub const WINDOW_H: i32 = 600;
 
-pub const TITLE_Y: i32 = 30;
-pub const CURRENCY_Y: i32 = 90;
-pub const PASSIVE_Y: i32 = 140;
+const TITLE_Y: i32 = 30;
+const CURRENCY_Y: i32 = 90;
+const PASSIVE_Y: i32 = 140;
 
 const CLICK_COST_INIT: i32 = 10;
 const PASSIVE_COST_INIT: i32 = 25;
 
-pub const CLICK_BUTTON: Rectangle = Rectangle {
+const CLICK_BUTTON: Rectangle = Rectangle {
     x: 80.0,
     y: 220.0,
     width: 240.0,
     height: 240.0,
 };
-pub const CLICK_UPGRADE: Rectangle = Rectangle {
+const CLICK_UPGRADE: Rectangle = Rectangle {
     x: 400.0,
     y: 220.0,
     width: 320.0,
     height: 110.0,
 };
-pub const PASSIVE_UPGRADE: Rectangle = Rectangle {
+const PASSIVE_UPGRADE: Rectangle = Rectangle {
     x: 400.0,
     y: 350.0,
     width: 320.0,

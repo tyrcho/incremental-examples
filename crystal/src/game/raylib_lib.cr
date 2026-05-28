@@ -31,9 +31,9 @@ lib LibRaylib
   fun get_frame_time          = GetFrameTime : Float32
 
   fun check_collision_point_rec = CheckCollisionPointRec(point : Vector2, rec : Rectangle) : Bool
-end
 
-MOUSE_BUTTON_LEFT = 0
+  MOUSE_BUTTON_LEFT = 0
+end
 
 RAYWHITE  = LibRaylib::Color.new(r: 245_u8, g: 245_u8, b: 245_u8, a: 255_u8)
 BLACK     = LibRaylib::Color.new(r:   0_u8, g:   0_u8, b:   0_u8, a: 255_u8)

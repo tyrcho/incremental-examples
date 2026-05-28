@@ -1,4 +1,5 @@
 require "lib_c"
+require "./game/raylib_lib"
 require "./game/run"
 
 LibRaylib.init_window(Game::WINDOW_W, Game::WINDOW_H, "Idle Clicker")

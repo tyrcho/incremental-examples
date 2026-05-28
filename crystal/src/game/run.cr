@@ -35,7 +35,7 @@ module Game
       end
 
       mouse = LibRaylib.get_mouse_position
-      if LibRaylib.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+      if LibRaylib.is_mouse_button_pressed(LibRaylib::MOUSE_BUTTON_LEFT)
         if LibRaylib.check_collision_point_rec(mouse, CLICK_BUTTON)
           currency += click_power
         elsif LibRaylib.check_collision_point_rec(mouse, CLICK_UPGRADE) && currency >= click_cost
