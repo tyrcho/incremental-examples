@@ -32,6 +32,18 @@ lib LibRaylib
 
   fun check_collision_point_rec = CheckCollisionPointRec(point : Vector2, rec : Rectangle) : Bool
 
+  struct Texture2D
+    id      : UInt32
+    width   : Int32
+    height  : Int32
+    mipmaps : Int32
+    format  : Int32
+  end
+
+  fun load_texture     = LoadTexture(file_name : LibC::Char*) : Texture2D
+  fun unload_texture   = UnloadTexture(texture : Texture2D)
+  fun draw_texture_pro = DrawTexturePro(texture : Texture2D, source : Rectangle, dest : Rectangle, origin : Vector2, rotation : Float32, tint : Color)
+
   MOUSE_BUTTON_LEFT = 0
 end
 
@@ -43,3 +55,4 @@ GREEN     = LibRaylib::Color.new(r:   0_u8, g: 228_u8, b:  48_u8, a: 255_u8)
 DARKGREEN = LibRaylib::Color.new(r:   0_u8, g: 117_u8, b:  44_u8, a: 255_u8)
 SKYBLUE   = LibRaylib::Color.new(r: 102_u8, g: 191_u8, b: 255_u8, a: 255_u8)
 RED       = LibRaylib::Color.new(r: 230_u8, g:  41_u8, b:  55_u8, a: 255_u8)
+WHITE     = LibRaylib::Color.new(r: 255_u8, g: 255_u8, b: 255_u8, a: 255_u8)

@@ -14,6 +14,14 @@ CLICK_BUTTON    :: rl.Rectangle{x =  80, y = 220, width = 240, height = 240}
 CLICK_UPGRADE   :: rl.Rectangle{x = 400, y = 220, width = 320, height = 110}
 PASSIVE_UPGRADE :: rl.Rectangle{x = 400, y = 350, width = 320, height = 110}
 
+COIN_FRAMES     :: 8
+COIN_FRAME_W    :: 128
+COIN_FRAME_H    :: 128
+COIN_FRAME_TIME :: 0.06
+COIN_SHEET_PATH :: "../assets/coin_sheet.png"
+
+COIN_DEST :: rl.Rectangle{x = 125, y = 232, width = 150, height = 150}
+
 next_cost :: proc(c: i32) -> i32 {
 	return (c * 3) / 2
 }
@@ -26,6 +34,13 @@ run :: proc() {
 	passive_cost: i32 = 25
 	accumulator:  f64 = 0.0
 
+	coin := rl.LoadTexture(COIN_SHEET_PATH)
+	defer rl.UnloadTexture(coin)
+
+	anim_playing := false
+	anim_frame:  i32 = 0
+	anim_timer:  f64 = 0.0
+
 	for !rl.WindowShouldClose() {
 		defer free_all(context.temp_allocator)
 
@@ -37,10 +52,26 @@ run :: proc() {
 			accumulator -= 1.0
 		}
 
+		if anim_playing {
+			anim_timer += f64(dt)
+			for anim_timer >= COIN_FRAME_TIME {
+				anim_timer -= COIN_FRAME_TIME
+				anim_frame += 1
+				if anim_frame >= COIN_FRAMES {
+					anim_frame   = COIN_FRAMES - 1
+					anim_playing = false
+					currency    += i64(click_power)
+					break
+				}
+			}
+		}
+
 		mouse := rl.GetMousePosition()
 		if rl.IsMouseButtonPressed(.LEFT) {
 			if rl.CheckCollisionPointRec(mouse, CLICK_BUTTON) {
-				currency += i64(click_power)
+				anim_playing = true
+				anim_frame   = 0
+				anim_timer   = 0.0
 			} else if rl.CheckCollisionPointRec(mouse, CLICK_UPGRADE) && currency >= i64(click_cost) {
 				currency    -= i64(click_cost)
 				click_power += 1
@@ -65,8 +96,13 @@ run :: proc() {
 		                 i32(CLICK_BUTTON.width), i32(CLICK_BUTTON.height), rl.GREEN)
 		rl.DrawRectangleLinesEx(CLICK_BUTTON, 3, rl.DARKGREEN)
 
-		block_h := i32(FONT_TITLE + FONT_LARGE)
-		top_y   := i32(CLICK_BUTTON.y) + (i32(CLICK_BUTTON.height) - block_h) / 2
+		coin_src := rl.Rectangle{
+			x = f32(anim_frame) * COIN_FRAME_W, y = 0,
+			width = COIN_FRAME_W, height = COIN_FRAME_H,
+		}
+		rl.DrawTexturePro(coin, coin_src, COIN_DEST, rl.Vector2{0, 0}, 0, rl.WHITE)
+
+		top_y   := i32(388)
 		draw_centered_text("CLICK", i32(CLICK_BUTTON.x), i32(CLICK_BUTTON.width),
 		                   top_y, FONT_TITLE, rl.BLACK)
 		draw_centered_text(fmt.ctprintf("(+%d)", click_power),

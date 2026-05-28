@@ -19,6 +19,14 @@ inline constexpr Rectangle CLICK_BUTTON    = { 80.0f,  220.0f, 240.0f, 240.0f };
 inline constexpr Rectangle CLICK_UPGRADE   = { 400.0f, 220.0f, 320.0f, 110.0f };
 inline constexpr Rectangle PASSIVE_UPGRADE = { 400.0f, 350.0f, 320.0f, 110.0f };
 
+inline constexpr int   COIN_FRAMES     = 8;
+inline constexpr float COIN_FRAME_W    = 128.0f;
+inline constexpr float COIN_FRAME_H    = 128.0f;
+inline constexpr double COIN_FRAME_TIME = 0.06;
+inline constexpr const char* COIN_SHEET_PATH = "../assets/coin_sheet.png";
+
+inline constexpr Rectangle COIN_DEST = { 125.0f, 232.0f, 150.0f, 150.0f };
+
 inline int32_t next_cost(int32_t c) { return (c * 3) / 2; }
 
 inline void run() {
@@ -29,16 +37,37 @@ inline void run() {
     int32_t passive_cost = 25;
     double  accumulator  = 0.0;
 
+    Texture2D coin = LoadTexture(COIN_SHEET_PATH);
+    bool   anim_playing = false;
+    int    anim_frame   = 0;
+    double anim_timer   = 0.0;
+
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();
 
         accumulator += (double)dt * (double)passive_rate;
         while (accumulator >= 1.0) { currency += 1; accumulator -= 1.0; }
 
+        if (anim_playing) {
+            anim_timer += (double)dt;
+            while (anim_timer >= COIN_FRAME_TIME) {
+                anim_timer -= COIN_FRAME_TIME;
+                anim_frame += 1;
+                if (anim_frame >= COIN_FRAMES) {
+                    anim_frame   = COIN_FRAMES - 1;
+                    anim_playing = false;
+                    currency    += click_power;
+                    break;
+                }
+            }
+        }
+
         Vector2 mouse = GetMousePosition();
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             if (CheckCollisionPointRec(mouse, CLICK_BUTTON)) {
-                currency += click_power;
+                anim_playing = true;
+                anim_frame   = 0;
+                anim_timer   = 0.0;
             } else if (CheckCollisionPointRec(mouse, CLICK_UPGRADE) && currency >= click_cost) {
                 currency    -= click_cost;
                 click_power += 1;
@@ -66,8 +95,10 @@ inline void run() {
                       (int)CLICK_BUTTON.width, (int)CLICK_BUTTON.height, GREEN);
         DrawRectangleLinesEx(CLICK_BUTTON, 3.0f, DARKGREEN);
 
-        int block_h = FONT_TITLE + FONT_LARGE;
-        int top_y   = (int)CLICK_BUTTON.y + ((int)CLICK_BUTTON.height - block_h) / 2;
+        Rectangle coin_src = { anim_frame * COIN_FRAME_W, 0.0f, COIN_FRAME_W, COIN_FRAME_H };
+        DrawTexturePro(coin, coin_src, COIN_DEST, Vector2{ 0.0f, 0.0f }, 0.0f, WHITE);
+
+        int top_y = 388;
         draw_centered_text("CLICK", (int)CLICK_BUTTON.x, (int)CLICK_BUTTON.width,
                            top_y, FONT_TITLE, BLACK);
 
@@ -89,6 +120,7 @@ inline void run() {
 
         EndDrawing();
     }
+    UnloadTexture(coin);
 }
 
 } // namespace game
