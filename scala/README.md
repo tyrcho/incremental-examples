@@ -1,9 +1,9 @@
 # Idle Clicker (Scala Native + raylib)
 
-A minimal idle clicker built with Scala Native 0.5.x and raylib. Click the
-green square to earn currency. Buy upgrades on the right to increase your
-per-click yield or earn passive income per second. Costs scale 1.5× per
-purchase.
+One of several language ports in this repo — implements the same idle-clicker
+spec in Scala Native 0.5.x + raylib. Click the green square to earn currency.
+Buy upgrades on the right to increase per-click yield or earn passive income
+per second. Costs scale 1.5× per purchase.
 
 ## Prereqs
 

@@ -5,6 +5,9 @@ enablePlugins(ScalaNativePlugin)
 scalaVersion := "3.3.4"
 name         := "idle_clicker"
 
+semanticdbEnabled := true
+semanticdbVersion := scalafixSemanticdb.revision
+
 nativeConfig ~= { c =>
   c.withLTO(LTO.none)
    .withMode(Mode.releaseFast)
