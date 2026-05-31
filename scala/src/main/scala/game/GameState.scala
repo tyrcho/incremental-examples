@@ -6,7 +6,7 @@ case class GameState(
     passiveRate: Int = 0,
     clickCost: Int = 10,
     passiveCost: Int = 25,
-    accumulator: Double = 0.0,
+    accumulatorSec: Float = 0.0f,
     anim: Option[AnimState] = None
 ):
 
@@ -32,20 +32,13 @@ case class GameState(
             )
         else this
 
-    def tick(dt: Double): GameState =
-        val newAcc = accumulator + dt * passiveRate
-        val earned = newAcc.toLong
-        val withPassive = copy(
-          currency = currency + earned,
-          accumulator = newAcc - earned.toDouble
+    def tick(dtSec: Float): GameState =
+        val newAcc  = accumulatorSec + dtSec * passiveRate
+        val earned  = newAcc.toLong
+        val newAnim = anim.flatMap(_.tick(dtSec))
+        val reward  = if anim.isDefined && newAnim.isEmpty then clickPower else 0
+        copy(
+          currency       = currency + earned + reward,
+          accumulatorSec = newAcc - earned.toFloat,
+          anim           = newAnim
         )
-        anim match
-            case None => withPassive
-            case Some(a) =>
-                a.tick(dt) match
-                    case Some(newAnim) => withPassive.copy(anim = Some(newAnim))
-                    case None =>
-                        withPassive.copy(
-                          anim = None,
-                          currency = withPassive.currency + clickPower
-                        )
