@@ -28,7 +28,11 @@ rust/target/
 **/*.rs.bk
 
 # Scala
-scala/target/
+scala/core/.js/target/
+scala/core/.native/target/
+scala/core/target/
+scala/native/target/
+scala/js/target/
 scala/.bsp/
 scala/project/target/
 scala/project/project/

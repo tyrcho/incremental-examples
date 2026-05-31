@@ -10,6 +10,9 @@ case class GameState(
     anim: Option[AnimState] = None
 ):
 
+    def canBuyClickUpgrade:   Boolean = currency >= clickCost
+    def canBuyPassiveUpgrade: Boolean = currency >= passiveCost
+
     def startAnimation(): GameState = copy(anim = Some(AnimState()))
 
     def tryBuyClickUpgrade: GameState =
