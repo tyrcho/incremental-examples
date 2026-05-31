@@ -4,15 +4,14 @@ import org.scalajs.dom
 object Main:
     def main(args: Array[String]): Unit =
         val canvas = dom.document.getElementById("game").asInstanceOf[dom.html.Canvas]
-        canvas.width  = Window.x.toInt
-        canvas.height = Window.y.toInt
-        val ctx      = canvas.getContext("2d").asInstanceOf[dom.CanvasRenderingContext2D]
-        val renderer = CanvasRenderer(ctx)
-        val input    = DomInput(canvas)
+        canvas.width  = Window.x
+        canvas.height = Window.y
+        val ctx   = canvas.getContext("2d").asInstanceOf[dom.CanvasRenderingContext2D]
+        val input = DomInput(canvas)
 
+        // f5: renderer constructed inside onload — sprite is always valid at construction
         val img = dom.document.createElement("img").asInstanceOf[dom.html.Image]
-        img.onload = _ => startLoop(renderer, input)
-        renderer.setSprite(img)
+        img.onload = _ => startLoop(CanvasRenderer(ctx, img), input)
         img.src = "coin_sheet.png"
 
     private def startLoop(renderer: CanvasRenderer, input: DomInput): Unit =
@@ -23,13 +22,9 @@ object Main:
             val tsF   = ts.toFloat
             val dtSec = ((tsF - lastTs) / 1000f).min(0.1f)
             lastTs    = tsF
-
-            for p <- input.takeClick() do
-                state = handleClick(p)(state)
-
+            for p <- input.takeClick() do state = handleClick(p)(state)
             state = state.tick(dtSec)
             drawScene(state, renderer)
-
             dom.window.requestAnimationFrame(tick)
 
         dom.window.requestAnimationFrame { ts =>

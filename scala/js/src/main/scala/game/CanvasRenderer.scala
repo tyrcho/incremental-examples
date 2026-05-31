@@ -3,10 +3,7 @@ package game
 import org.scalajs.dom
 import org.scalajs.dom.CanvasRenderingContext2D
 
-class CanvasRenderer(ctx: CanvasRenderingContext2D) extends Renderer:
-    private var sprite: Option[dom.html.Image] = None
-
-    def setSprite(img: dom.html.Image): Unit = sprite = Some(img)
+class CanvasRenderer(ctx: CanvasRenderingContext2D, sprite: dom.html.Image) extends Renderer:
 
     private def rgba(c: RgbaColor): String =
         s"rgba(${c.r},${c.g},${c.b},${c.a / 255.0})"
@@ -35,16 +32,14 @@ class CanvasRenderer(ctx: CanvasRenderingContext2D) extends Renderer:
         ctx.fillText(text, pos.x.toDouble, pos.y.toDouble)
 
     def drawSpriteFrame(frameIdx: Int, frameSize: Point, dest: Rect, tint: RgbaColor): Unit =
-        sprite.foreach { img =>
-            ctx.drawImage(
-              img,
-              frameIdx * frameSize.x.toDouble,
-              0,
-              frameSize.x.toDouble,
-              frameSize.y.toDouble,
-              dest.x.toDouble,
-              dest.y.toDouble,
-              dest.w.toDouble,
-              dest.h.toDouble
-            )
-        }
+        ctx.drawImage(
+          sprite,
+          frameIdx * frameSize.x.toDouble,
+          0,
+          frameSize.x.toDouble,
+          frameSize.y.toDouble,
+          dest.x.toDouble,
+          dest.y.toDouble,
+          dest.w.toDouble,
+          dest.h.toDouble
+        )

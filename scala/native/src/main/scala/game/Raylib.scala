@@ -78,6 +78,11 @@ extension (r: Ptr[Rectangle])
     def width: CFloat  = r._3; def width_=(v: CFloat): Unit  = r._3 = v
     def height: CFloat = r._4; def height_=(v: CFloat): Unit = r._4 = v
 
+// f6: Vector2 named accessors, consistent with Color and Rectangle
+extension (v: Ptr[Vector2])
+    def vx: CFloat = v._1; def vx_=(f: CFloat): Unit = v._1 = f
+    def vy: CFloat = v._2; def vy_=(f: CFloat): Unit = v._2 = f
+
 // inline so stackalloc lives in the caller's frame
 inline def mkColor(r: Int, g: Int, b: Int, a: Int): Ptr[Color] =
     val p = stackalloc[Color]()
@@ -91,16 +96,17 @@ inline def mkRect(x: Float, y: Float, w: Float, h: Float): Ptr[Rectangle] =
 
 inline def mkVec2(x: Float, y: Float): Ptr[Vector2] =
     val p = stackalloc[Vector2]()
-    p._1 = x; p._2 = y
+    p.vx = x; p.vy = y
     p
 
+// f1: derive RGB triplets from the authoritative RgbaColor values in core
 object Colors:
-    inline def BLACK: Ptr[Color]     = mkColor(0, 0, 0, 255)
-    inline def DARKGRAY: Ptr[Color]  = mkColor(80, 80, 80, 255)
-    inline def DARKGREEN: Ptr[Color] = mkColor(0, 117, 44, 255)
-    inline def GREEN: Ptr[Color]     = mkColor(0, 228, 48, 255)
-    inline def LIGHTGRAY: Ptr[Color] = mkColor(200, 200, 200, 255)
-    inline def RAYWHITE: Ptr[Color]  = mkColor(245, 245, 245, 255)
-    inline def RED: Ptr[Color]       = mkColor(230, 41, 55, 255)
-    inline def SKYBLUE: Ptr[Color]   = mkColor(102, 191, 255, 255)
-    inline def WHITE: Ptr[Color]     = mkColor(255, 255, 255, 255)
+    inline def BLACK:     Ptr[Color] = mkColor(RgbaColor.Black.r,     RgbaColor.Black.g,     RgbaColor.Black.b,     255)
+    inline def DARKGRAY:  Ptr[Color] = mkColor(RgbaColor.DarkGray.r,  RgbaColor.DarkGray.g,  RgbaColor.DarkGray.b,  255)
+    inline def DARKGREEN: Ptr[Color] = mkColor(RgbaColor.DarkGreen.r, RgbaColor.DarkGreen.g, RgbaColor.DarkGreen.b, 255)
+    inline def GREEN:     Ptr[Color] = mkColor(RgbaColor.Green.r,     RgbaColor.Green.g,     RgbaColor.Green.b,     255)
+    inline def LIGHTGRAY: Ptr[Color] = mkColor(RgbaColor.LightGray.r, RgbaColor.LightGray.g, RgbaColor.LightGray.b, 255)
+    inline def RAYWHITE:  Ptr[Color] = mkColor(RgbaColor.RayWhite.r,  RgbaColor.RayWhite.g,  RgbaColor.RayWhite.b,  255)
+    inline def RED:       Ptr[Color] = mkColor(RgbaColor.Red.r,       RgbaColor.Red.g,       RgbaColor.Red.b,       255)
+    inline def SKYBLUE:   Ptr[Color] = mkColor(RgbaColor.SkyBlue.r,   RgbaColor.SkyBlue.g,   RgbaColor.SkyBlue.b,   255)
+    inline def WHITE:     Ptr[Color] = mkColor(RgbaColor.White.r,     RgbaColor.White.g,     RgbaColor.White.b,     255)

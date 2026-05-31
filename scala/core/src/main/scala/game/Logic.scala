@@ -50,9 +50,8 @@ private def drawUpgradeButton(
 ): Unit =
     r.drawRect(rect, if affordable then SkyBlue else LightGray)
     r.drawRectOutline(rect, 2f, DarkGray)
-    val x = rect.x + 12
-    var y = rect.y + 4
-    r.drawText(title,      Point(x, y), FONT_MEDIUM, Black);    y += FONT_MEDIUM + 4
-    r.drawText(levelLine,  Point(x, y), FONT_SMALL,  DarkGray); y += FONT_SMALL  + 4
-    r.drawText(effectLine, Point(x, y), FONT_SMALL,  DarkGray); y += FONT_SMALL  + 4
-    r.drawText(costLine,   Point(x, y), FONT_SMALL,  if affordable then Black else Red)
+    val (p0, p1, p2, p3) = upgradeTextPoints(rect)
+    r.drawText(title,      p0, FONT_MEDIUM, Black)
+    r.drawText(levelLine,  p1, FONT_SMALL,  DarkGray)
+    r.drawText(effectLine, p2, FONT_SMALL,  DarkGray)
+    r.drawText(costLine,   p3, FONT_SMALL,  if affordable then Black else Red)

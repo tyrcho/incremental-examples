@@ -3,15 +3,15 @@ package game
 import scala.scalanative.unsafe.*
 
 class RaylibInput extends Input:
-    private var _px: Float = 0f
-    private var _py: Float = 0f
+    private var mouseX: Float = 0f  // f10: idiomatic Scala 3 — no underscore prefix
+    private var mouseY: Float = 0f
 
-    def poll()(using Zone): Unit =
+    def poll(): Unit =  // stackalloc needs no Zone
         val mouse = stackalloc[Vector2]()
         Raylib.SN_GetMousePosition(mouse)
-        _px = mouse._1
-        _py = mouse._2
+        mouseX = mouse.vx
+        mouseY = mouse.vy
 
     def takeClick(): Option[Point] =
-        if Raylib.IsMouseButtonPressed(MOUSE_LEFT) then Some(Point(_px.toInt, _py.toInt))
+        if Raylib.IsMouseButtonPressed(MOUSE_LEFT) then Some(Point(mouseX.toInt, mouseY.toInt))
         else None

@@ -23,6 +23,8 @@ lazy val native = project
             c.withLTO(LTO.none)
                 .withMode(Mode.releaseFast)
                 .withGC(GC.commix)
+                // macOS (Homebrew) only. On Linux: replace "-L/opt/homebrew/lib" with
+                // "-L/usr/local/lib" and remove the -framework lines (raylib links via pkg-config).
                 .withLinkingOptions(
                     c.linkingOptions ++ Seq(
                         "-L/opt/homebrew/lib",
