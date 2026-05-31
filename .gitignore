@@ -26,3 +26,9 @@ odin/idle_clicker
 # Rust
 rust/target/
 **/*.rs.bk
+
+# Scala
+scala/target/
+scala/.bsp/
+scala/project/target/
+scala/project/project/
